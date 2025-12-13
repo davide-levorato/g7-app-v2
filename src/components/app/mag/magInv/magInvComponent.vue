@@ -13,17 +13,33 @@
           <q-input outlined autofocus v-model="inputText" @keyup.enter="onReadText"></q-input>
         </div>
       </div>
-      <q-btn label="vib" @click="onVibrate"></q-btn>
-      <div>
+      <div v-if="udcRead" class="q-mt-sm q-px-sm">
         <span class="text-h6">
-          <pre>{{ debugScan }}</pre>
+          UDC {{ udc.barcode }}
+        </span>
+        <q-list bordered separator class="q-mt-sm">
+          <q-item v-for="item in udc.items" :key="item.id">
+            <q-item-section>
+              <q-item-label>
+                {{ item.codArticolo }} {{ item.codLotto }}
+              </q-item-label>
+              <q-item-label caption>
+                {{ item.descrArticolo }}
+              </q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-item-label class="text-bold">
+                {{ item.qty }} {{ item.umGestione }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
+      <div v-else class="q-mt-lg text-center">
+        <span class="text-h6">
+          Leggere UDC
         </span>
       </div>
-      <!-- <div v-for="(k, idx) in debugScanKeys" :key="'k' + idx">
-        <div>{{ k }}</div>
-        <div style="border-bottom:1px solid #000000;">K: {{ debugScan[k] }}</div>
-      </div>
-    -->
     </div>
     <q-page-sticky expand position="bottom" :offset="[18, 18]">
       <div class="row full-width">
@@ -47,14 +63,6 @@
                       </q-item-label>
                     </q-item-section>
                   </q-item>
-                  <q-item clickable>
-                    <q-item-section avatar>
-                      <q-icon name="fal fa-camera"></q-icon>
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>Esci</q-item-label>
-                    </q-item-section>
-                  </q-item>
                 </q-list>
               </q-card-section>
             </q-card>
@@ -67,37 +75,61 @@
       </div>
     </q-page-sticky>
     <new-udc-dialog v-model="newUdcDialogShow"></new-udc-dialog>
+    <udc-location-dialog v-model="udcLocationDialogShow" :udc="udc" :location="location"></udc-location-dialog>
+    <item-dialog v-model="itemDialogShow" :udc="udc" :item="item" :lot="lot"></item-dialog>
   </q-page>
 </template>
 <!-- eslint-disable no-unused-vars -->
 <script setup>
 import _ from 'lodash'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { LocalStorage, useQuasar } from 'quasar'
+
 import { useServiceStore } from 'stores/service'
+import { useApplicationStore } from 'stores/application'
+
 import { apiIdLabel } from 'api/mag'
 
 import newUdcDialog from './dialogs/newUdcDialog.vue'
+import udcLocationDialog from './dialogs/udcLocationDialog.vue'
+import itemDialog from './dialogs/itemDialog.vue'
 
 const serviceStore = useServiceStore()
+const applicationStore = useApplicationStore()
+
+const q$ = useQuasar()
 
 const showInput = ref(false)
 const inputText = ref('')
+
 const newUdcDialogShow = ref(false)
+const udcLocationDialogShow = ref(false)
+const itemDialogShow = ref(false)
 
 const batteryStatusLevel = ref(0)
 const batteryStatusPlugged = ref(false)
 
-const debugText = ref('')
-const debugScan = ref({})
-const debugScanKeys = ref([])
+/*
+UDC che sto trattando
+se vuoto significa che devo leggere un udc per iniziare il processo
+*/
+const udc = ref({})
+const location = ref({})
+const item = ref({})
+const lot = ref({})
+
+const udcRead = computed(() => {
+  return !_.isEmpty(udc.value)
+})
+const udcBarcode = computed(() => {
+  return _.get(udc.value, 'barcode', '')
+})
 
 onMounted(() => {
-  // document.addEventListener('deviceready', () => {
-  // window.addEventListener('batterystatus', onBatteryStatus, false)
-  // }, false)
-  // window.broadcaster.addEventListener('it.g7gelati.tapp.ACTION', true, onScanTextReceived);
-
-  debugText.value = 'mounted'
+  if (applicationStore.deviceReady) {
+    window.addEventListener('batterystatus', onBatteryStatus, false)
+    window.broadcaster.addEventListener('it.g7gelati.tapp.ACTION', true, onScanTextReceived);
+  }
 })
 
 onUnmounted (() => {
@@ -113,9 +145,49 @@ const onSwitchInput = function () {
 }
 
 const onReadText = function () {
-  serviceStore.apiCall(apiIdLabel, { check: ['LABEL_LOCATION'], barcode: inputText.value}, true).then(function(r) {
-    debugScan.value = r.data
-  })
+  onCheckText(inputText.value)
+  inputText.value = ''
+}
+
+const onScanTextReceived = function(e) {
+  const scanString = _.get(e, 'com.symbol.datawedge.data_string', '')
+  // navigator.vibrate([200, 500, 200, 500])
+  onCheckText(scanString)
+}
+
+/* controlla una lettura effettuata tramite input o scanner */
+const onCheckText = function (text) {
+  /* se udc + vuoto allora controllo se sto leggendo un UDC */
+  if (!udcRead.value) {
+    serviceStore.apiCall(apiIdLabel, { check: ['LABEL_UDC'], barcode: text, options: { data: true }}, true).then(function(r) {
+      const isUdc = _.get(r, 'data.labelTypeFound', false)
+      const udcData = _.get(r, 'data.labelData', {})
+      udc.value = udcData
+
+      inputText.value = ''
+    })
+  } else {
+    serviceStore.apiCall(apiIdLabel, { check: ['LABEL_ITEM', 'LABEL_LOCATION'], barcode: text, options: {}}, true).then(function(r) {
+      const labelType = _.get(r, 'data.labelType', '')
+
+      /*
+        se label type location vado ad inserire l'UDC nel vano e lo chiudo (chiedo conferma?)
+      */
+      /*
+      se label ean item chiedo quantità e inserisco l'articolo / lotto nell'udc
+      */
+      if (labelType === 'LABEL_LOCATION') {
+        const locationId = _.get(r, 'data.labelData.locationId', 0)
+        location.value = _.get(r, 'data.labelData', {})
+        udcLocationDialogShow.value = true
+      }
+      if (labelType === 'LABEL_ITEM') {
+        item.value = _.get(r, 'data.labelData.item', {})
+        lot.value = _.get(r, 'data.labelData.lot', {})
+        itemDialogShow.value = true
+      }
+    })
+  }
 }
 
 const onBatteryStatus = function(status) {
@@ -134,9 +206,5 @@ const onScan = function() {
   })
 }
 
-const onScanTextReceived = function(e) {
-  debugScan.value = e
-  debugScanKeys.value = _.keys(e)
-  navigator.vibrate([200, 500, 200, 500])
-}
+
 </script>

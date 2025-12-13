@@ -31,9 +31,8 @@
     </q-page-container>
   </q-layout>
 </template>
-
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useMeta } from 'quasar'
 import { useApplicationStore } from 'stores/application'
 import { useServiceStore } from 'stores/service'
@@ -43,6 +42,12 @@ const route = useRoute()
 const router = useRouter()
 const applicationStore = useApplicationStore()
 const serviceStore = useServiceStore()
+
+onMounted(() => {
+  document.addEventListener('deviceready', () => {
+    applicationStore.setDeviceReady(true)
+  }, false)
+})
 
 const isHome = computed(() => {
   return route.name === 'rtHome'

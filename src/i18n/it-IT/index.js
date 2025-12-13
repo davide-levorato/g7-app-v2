@@ -269,6 +269,7 @@ export default {
       lbReset: 'Reset',
       val: {
         txtRequired: 'Campo obbligatorio',
+        txtNumber: 'Inserire un nummero valido',
         txtUnique: 'Il codice esiste già e non può essere duplicato',
         numUnique: 'Il numero esiste già e non può essere duplicato',
         locationUnique: 'La sede esiste già e non può essere duplicato',

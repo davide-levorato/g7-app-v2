@@ -10,6 +10,8 @@ export const useApplicationStore = defineStore("application", {
     return {
       intCurrentRoute: {},
 
+      intDeviceReady: false,
+
       intLeftDrawerOpen: true,
       intLeftDrawerMini: false,
       intLocale: locale,
@@ -40,6 +42,9 @@ export const useApplicationStore = defineStore("application", {
     }
   },
   getters: {
+    deviceReady: function(state) {
+      return state.intDeviceReady
+    },
     currentRoute: function (state) {
       return state.intCurrentRoute
     },
@@ -82,6 +87,9 @@ export const useApplicationStore = defineStore("application", {
     },
   },
   actions: {
+    setDeviceReady(ready) {
+      this.intDeviceReady = ready
+    },
     leftDrawerOpenSet(p) {
       this.intLeftDrawerOpen = p
     },

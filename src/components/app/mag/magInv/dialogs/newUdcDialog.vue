@@ -26,7 +26,7 @@
   </q-dialog>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import _ from 'lodash'
 import { useQuasar } from 'quasar'
 import { useRegle } from '@regle/core'
@@ -69,6 +69,13 @@ const { r$ } = useRegle(
     autoDirty: false
   }
 )
+
+watch(dlgModel, function(v) {
+  if (v === true) {
+    r$.$value.udcQty = 1
+    r$.$reset()
+  }
+})
 
 const onCancel = function () {
   r$.$reset()
