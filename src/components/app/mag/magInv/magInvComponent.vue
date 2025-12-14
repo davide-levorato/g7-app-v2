@@ -14,11 +14,18 @@
         </div>
       </div>
       <div v-if="udcRead" class="q-mt-sm q-px-sm">
-        <span class="text-h6">
-          UDC {{ udc.barcode }}
-        </span>
+        <div class="row">
+          <div class="col-xs-9">
+            <span class="text-h6">
+              UDC {{ udc.barcode }}
+            </span>
+          </div>
+          <div class="col-xs-3 text-right">
+            <q-btn icon="fal fa-arrow-right-from-dotted-line" outline color="blue-4" text-color="blue-4" size="md" @click="onCloseUdc"></q-btn>
+          </div>
+        </div>
         <q-list bordered separator class="q-mt-sm">
-          <q-item v-for="item in udc.items" :key="item.id">
+          <q-item v-for="item in udc.items" :key="item.id" style="padding-left:2px;" clickable @click="onDeleteItem(item)">
             <q-item-section>
               <q-item-label>
                 {{ item.codArticolo }} {{ item.codLotto }}
@@ -28,7 +35,10 @@
               </q-item-label>
             </q-item-section>
             <q-item-section side>
-              <q-item-label class="text-bold">
+              <q-badge floating outline class="q-mt-xs">
+                <q-icon name="fal fa-trash-alt" color="red-6" size="14px"></q-icon>
+              </q-badge>
+              <q-item-label class="text-subtitle2 text-bold">
                 {{ item.qty }} {{ item.umGestione }}
               </q-item-label>
             </q-item-section>
@@ -88,7 +98,7 @@ import { LocalStorage, useQuasar } from 'quasar'
 import { useServiceStore } from 'stores/service'
 import { useApplicationStore } from 'stores/application'
 
-import { apiIdLabel } from 'api/mag'
+import { apiIdLabel, apiUdcDelItem } from 'api/mag'
 
 import newUdcDialog from './dialogs/newUdcDialog.vue'
 import udcLocationDialog from './dialogs/udcLocationDialog.vue'
@@ -140,6 +150,13 @@ const onNewUdc = function() {
   newUdcDialogShow.value = true
 }
 
+const onCloseUdc = function() {
+  udc.value = {}
+  location.value = {}
+  item.value = {}
+  lot.value = {}
+}
+
 const onSwitchInput = function () {
   showInput.value = !showInput.value
 }
@@ -153,6 +170,16 @@ const onScanTextReceived = function(e) {
   const scanString = _.get(e, 'com.symbol.datawedge.data_string', '')
   // navigator.vibrate([200, 500, 200, 500])
   onCheckText(scanString)
+}
+
+const loadUdcData = function (udcBarcode) {
+  serviceStore.apiCall(apiIdLabel, { check: ['LABEL_UDC'], barcode: udcBarcode, options: { data: true }}, true).then(function(r) {
+    const isUdc = _.get(r, 'data.labelTypeFound', false)
+    const udcData = _.get(r, 'data.labelData', {})
+    udc.value = udcData
+
+    inputText.value = ''
+  })
 }
 
 /* controlla una lettura effettuata tramite input o scanner */
@@ -206,5 +233,29 @@ const onScan = function() {
   })
 }
 
+const onDeleteItem = function(item) {
+  q$.dialog({
+    title: 'Conferma eliminazione',
+    message: `Eliminare l'articolo ${item.codArticolo} ${item.descrArticolo} dall'UDC ${udcBarcode.value}?`,
+    cancel: {
+      label: 'Annulla',
+      'no-caps': true
+    },
+    ok: {
+      label: 'Elimina',
+      push: true,
+      icon: 'fal fa-trash-alt',
+      color: 'negative',
+      'no-caps': true
+    },
+    persistent: true
+  }).onOk( async () => {
+    const r = await serviceStore.apiCall(apiUdcDelItem, { id: item.id }, true)
 
+    const result = _.get(r, 'data.result', false)
+    const resultMessage = _.get(r, 'data.message', '')
+
+    loadUdcData(udc.value.barcode)
+  })
+}
 </script>
