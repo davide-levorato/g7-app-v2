@@ -89,8 +89,8 @@ const validators = {
 }
 
 const formState = ref({
-  g7Username: 'gianluca.visani',
-  g7Password: '412464872222'
+  g7Username: '',
+  g7Password: ''
 })
 
 const { r$ } = useRegle(

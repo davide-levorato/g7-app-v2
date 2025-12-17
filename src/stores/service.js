@@ -10,7 +10,8 @@ import { apiValidateToken } from "src/lib/api/auth"
 import { getQuery } from "src/lib/api/service"
 
 import axios from 'axios'
-const SERVICE_URL = 'https://dev-api-v4.g7gelati.it'
+// const SERVICE_URL = 'https://dev-api-v4.g7gelati.it'
+const SERVICE_URL = 'https://prod-api-v4.g7gelati.it'
 const APPLICATION_VERSION = '0.2.1'
 
 const axiosBase = axios.create({ timeout: 1500000 })

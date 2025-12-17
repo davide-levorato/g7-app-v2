@@ -74,7 +74,7 @@
       </q-card-section>
       <q-card-actions align="right">
         <q-btn no-caps label="Annulla" @click="onCancel"></q-btn>
-        <q-btn no-caps icon="fal fa-save" color="green-6" label="Assegna"></q-btn>
+        <q-btn no-caps icon="fal fa-save" color="green-6" label="Assegna" @click="onAssign"></q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -85,7 +85,7 @@ import { ref, watch, computed } from 'vue'
 import _ from 'lodash'
 import { useQuasar } from 'quasar'
 import { useServiceStore } from 'src/stores/service.js'
-import { apiPrintUdc } from 'api/mag'
+import { apiUdcSetLocation } from 'api/mag'
 
 const props = defineProps({
   udc: {
@@ -111,18 +111,36 @@ const locationBarcode = computed(() => {
   return _.get(props.location, 'barcode', '')
 })
 
-const level = props.location.level
-const levels = props.location.rackLevels
-
 const levelOptions = ref([])
-const udcLevel = ref(level)
+const udcLevel = ref(0)
 
-for (var i = level; i <= levels; i++) {
-  levelOptions.value.push(i)
-}
+const emit = defineEmits(['udcAssigned'])
+
+watch(dlgModel, function(v) {
+  if (v) {
+    const level = props.location.level
+    const levels = props.location.rackLevels
+
+    levelOptions.value = []
+    udcLevel.value = level
+
+    for (var i = level; i <= levels; i++) {
+      levelOptions.value.push(i)
+    }
+  }
+})
 
 const onCancel = function () {
   dlgModel.value = false
 }
 
+const onAssign = function() {
+  serviceStore.apiCall(apiUdcSetLocation, { udcId: props.udc.id, locationId: props.location.id }, true).then(function(r) {
+    const res = _.get(r, 'data.result', false)
+    if (res) {
+      dlgModel.value = false
+      emit('udcAssigned')
+    }
+  })
+ }
 </script>

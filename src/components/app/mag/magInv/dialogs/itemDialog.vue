@@ -105,9 +105,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['itemAssigned'])
-
 const { t } = useI18n({ useScope: 'global' })
-
 const formField = useFormField()
 
 
@@ -142,6 +140,14 @@ const resultMessage = ref('')
 
 const udcBarcode = computed(() => {
   return _.get(props.udc, 'barcode', '')
+})
+
+watch(dlgModel, function(v) {
+  if (v) {
+    result.value = true
+    resultMessage.value = ''
+    r$.$reset()
+  }
 })
 
 const itemCode = computed(() => {

@@ -85,8 +85,8 @@
       </div>
     </q-page-sticky>
     <new-udc-dialog v-model="newUdcDialogShow"></new-udc-dialog>
-    <udc-location-dialog v-model="udcLocationDialogShow" :udc="udc" :location="location"></udc-location-dialog>
-    <item-dialog v-model="itemDialogShow" :udc="udc" :item="item" :lot="lot"></item-dialog>
+    <udc-location-dialog v-model="udcLocationDialogShow" :udc="udc" :location="location" @udcAssigned="onUdcAssigned"></udc-location-dialog>
+    <item-dialog v-model="itemDialogShow" :udc="udc" :item="item" :lot="lot" @itemAssigned="onItemAssigned"></item-dialog>
   </q-page>
 </template>
 <!-- eslint-disable no-unused-vars -->
@@ -144,6 +144,9 @@ onMounted(() => {
 
 onUnmounted (() => {
   window.removeEventListener('batterystatus', onBatteryStatus)
+  if (window.broadcaster) {
+    window.broadcaster.removeEventListener('it.g7gelati.tapp.ACTION', onScanTextReceived)
+  }
 })
 
 const onNewUdc = function() {
@@ -151,6 +154,13 @@ const onNewUdc = function() {
 }
 
 const onCloseUdc = function() {
+  udc.value = {}
+  location.value = {}
+  item.value = {}
+  lot.value = {}
+}
+
+const onUdcAssigned = function() {
   udc.value = {}
   location.value = {}
   item.value = {}
@@ -168,6 +178,7 @@ const onReadText = function () {
 
 const onScanTextReceived = function(e) {
   const scanString = _.get(e, 'com.symbol.datawedge.data_string', '')
+
   // navigator.vibrate([200, 500, 200, 500])
   onCheckText(scanString)
 }
@@ -257,5 +268,9 @@ const onDeleteItem = function(item) {
 
     loadUdcData(udc.value.barcode)
   })
+}
+
+const onItemAssigned = function () {
+  loadUdcData(udc.value.barcode)
 }
 </script>

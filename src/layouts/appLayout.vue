@@ -18,6 +18,13 @@
                       <q-item-label>Esci</q-item-label>
                     </q-item-section>
                   </q-item>
+                  <q-item clickable>
+                    <q-item-section avatar>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Versione 0.0.3</q-item-label>
+                    </q-item-section>
+                  </q-item>
                 </q-list>
               </q-card-section>
             </q-card>

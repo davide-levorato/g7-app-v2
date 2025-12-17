@@ -1,9 +1,9 @@
 {
   "name": "it.g7gelati.tapp",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "G7 Mobile app",
   "productName": "G7 App",
-  "author": "davide-levorato <d.levorato@bpsistema.it>",
+  "author": "davide-levorato <d.levorato@gmail.com>",
   "type": "module",
   "private": true,
   "scripts": {

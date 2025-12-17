@@ -3,10 +3,12 @@ const idLabel = '/mag/idLabel'
 
 const udcSetItem = '/mag/udc/item'
 const udcDelItem = '/mag/udc/item/del'
+const udcsetLocation = '/mag/udc/location'
 
 export {
   printUdc as apiPrintUdc,
   idLabel as apiIdLabel,
   udcSetItem as apiUdcSetItem,
-  udcDelItem as apiUdcDelItem
+  udcDelItem as apiUdcDelItem,
+  udcsetLocation as apiUdcSetLocation
 }
