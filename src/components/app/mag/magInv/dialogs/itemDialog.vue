@@ -108,7 +108,6 @@ const emit = defineEmits(['itemAssigned'])
 const { t } = useI18n({ useScope: 'global' })
 const formField = useFormField()
 
-
 const formState = {
   itemQty: null
 }
@@ -118,7 +117,7 @@ const validators = {
     required: withMessage(required, t('common.form.val.txtRequired')),
     number: withMessage(number, t('common.form.val.txtNumber')),
     minValue: withMessage(minValue(.01), t('common.form.val.minValue', { val: .01 })),
-    maxValue: withMessage(maxValue(10000), t('common.form.val.maxValue', { val: 10000 })),
+    maxValue: withMessage(maxValue(1000000), t('common.form.val.maxValue', { val: 1000000 })),
   }
 }
 

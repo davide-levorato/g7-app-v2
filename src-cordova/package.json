@@ -1,7 +1,7 @@
 {
   "name": "it.g7gelati.tapp",
   "displayName": "G7 App",
-  "version": "1.0.0",
+  "version": "1.0.7",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {

@@ -45,6 +45,11 @@
               <q-btn no-caps label="Login" color="brown-5" padding="md lg" class="full-width" @click="onSubmit"></q-btn>
             </div>
           </div>
+          <div class="row q-mt-sm">
+            <div class="col-xs-12 q-px-sm text-right text-caption text-grey-6">
+              v. {{ applicationStore.appVersion }}
+            </div>
+          </div>
         </q-card-section>
         <q-resize-observer @resize="onCardResize" />
       </q-card>
@@ -60,12 +65,15 @@ import { useRegle } from '@regle/core'
 import { required, withMessage } from '@regle/rules'
 import { useRoute, useRouter } from 'vue-router'
 import { useServiceStore } from 'src/stores/service.js'
+import { useApplicationStore } from 'src/stores/application.js'
 import { useFormField } from 'src/components/common/form/useFormField'
 import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const router = useRouter()
+
 const serviceStore = useServiceStore()
+const applicationStore = useApplicationStore()
 
 const infoCardHeight = ref(0)
 const showLoginError = ref(false)

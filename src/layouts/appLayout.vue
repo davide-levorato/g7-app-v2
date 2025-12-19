@@ -20,9 +20,12 @@
                   </q-item>
                   <q-item clickable>
                     <q-item-section avatar>
+                      <q-icon name="fal fa-command"></q-icon>
                     </q-item-section>
                     <q-item-section>
-                      <q-item-label>Versione 0.0.3</q-item-label>
+                      <q-item-label>
+                        v. {{ applicationStore.appVersion }}
+                      </q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
