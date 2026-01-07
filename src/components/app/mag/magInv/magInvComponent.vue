@@ -89,11 +89,10 @@
     <item-dialog v-model="itemDialogShow" :udc="udc" :item="item" :lot="lot" @itemAssigned="onItemAssigned"></item-dialog>
   </q-page>
 </template>
-<!-- eslint-disable no-unused-vars -->
 <script setup>
 import _ from 'lodash'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { LocalStorage, useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 
 import { useServiceStore } from 'stores/service'
 import { useApplicationStore } from 'stores/application'
@@ -185,7 +184,6 @@ const onScanTextReceived = function(e) {
 
 const loadUdcData = function (udcBarcode) {
   serviceStore.apiCall(apiIdLabel, { check: ['LABEL_UDC'], barcode: udcBarcode, options: { data: true }}, true).then(function(r) {
-    const isUdc = _.get(r, 'data.labelTypeFound', false)
     const udcData = _.get(r, 'data.labelData', {})
     udc.value = udcData
 
@@ -198,7 +196,7 @@ const onCheckText = function (text) {
   /* se udc + vuoto allora controllo se sto leggendo un UDC */
   if (!udcRead.value) {
     serviceStore.apiCall(apiIdLabel, { check: ['LABEL_UDC'], barcode: text, options: { data: true }}, true).then(function(r) {
-      const isUdc = _.get(r, 'data.labelTypeFound', false)
+      // const isUdc = _.get(r, 'data.labelTypeFound', false)
       const udcData = _.get(r, 'data.labelData', {})
       udc.value = udcData
 
@@ -215,7 +213,7 @@ const onCheckText = function (text) {
       se label ean item chiedo quantità e inserisco l'articolo / lotto nell'udc
       */
       if (labelType === 'LABEL_LOCATION') {
-        const locationId = _.get(r, 'data.labelData.locationId', 0)
+        // const locationId = _.get(r, 'data.labelData.locationId', 0)
         location.value = _.get(r, 'data.labelData', {})
         udcLocationDialogShow.value = true
       }
@@ -233,9 +231,10 @@ const onBatteryStatus = function(status) {
   batteryStatusPlugged.value = status.isPlugged
 }
 
+/*
 const onVibrate = function () {
   navigator.vibrate([200, 500, 200, 500])
-}
+} */
 
 const onScan = function() {
   window.broadcaster.fireNativeEvent( 'com.symbol.datawedge.api.ACTION', true, {
@@ -261,10 +260,10 @@ const onDeleteItem = function(item) {
     },
     persistent: true
   }).onOk( async () => {
-    const r = await serviceStore.apiCall(apiUdcDelItem, { id: item.id }, true)
+    /* const r = */ await serviceStore.apiCall(apiUdcDelItem, { id: item.id }, true)
 
-    const result = _.get(r, 'data.result', false)
-    const resultMessage = _.get(r, 'data.message', '')
+    // const result = _.get(r, 'data.result', false)
+    // const resultMessage = _.get(r, 'data.message', '')
 
     loadUdcData(udc.value.barcode)
   })

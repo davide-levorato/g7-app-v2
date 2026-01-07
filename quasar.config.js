@@ -41,6 +41,7 @@ export default defineConfig((ctx) => {
       alias: {
         'api': fileURLToPath(new URL('./src/lib/api', import.meta.url)),
         'utils': fileURLToPath(new URL('./src/lib/utils', import.meta.url)),
+        'dialogs': fileURLToPath(new URL('./src/components/common/dialogs', import.meta.url)),
         'components': fileURLToPath(new URL('./src/components', import.meta.url)),
         'dbForms': fileURLToPath(new URL('./src/components/common/dbForms', import.meta.url)),
         'dbFormComponents': fileURLToPath(new URL('./src/components/common/dbForms/components', import.meta.url))

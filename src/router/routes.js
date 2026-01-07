@@ -34,6 +34,15 @@ const routes = [
           auth: 'required',
           application: 'MAG_INV'
         }
+      },
+      {
+        path: 'whInbound',
+        name: 'rtWhInbound',
+        component: () => import('src/components/app/mag/whInbound/whInboundComponent.vue'),
+        meta: {
+          auth: 'required',
+          application: 'WH_INBOUND'
+        }
       }
     ]
   },

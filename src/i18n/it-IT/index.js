@@ -200,6 +200,12 @@ export default {
       title: 'Dati logistici',
       browserTitle: 'Dati logistici',
       menuLabel: 'Dati logistici'
+    },
+    WH_INBOUND: {
+      name: 'Ingresso merce',
+      title: 'Ingresso merce',
+      browserTitle: 'Ingresso merce',
+      menuLabel: 'Ingresso merce'
     }
   },
   common: {
