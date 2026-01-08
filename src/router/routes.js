@@ -43,6 +43,34 @@ const routes = [
           auth: 'required',
           application: 'WH_INBOUND'
         }
+      },
+      {
+        path: 'whProdSupply',
+        name: 'rtWhProdSupply',
+        component: () => import('src/components/app/mag/whProdSupply/whProdSupplyComponent.vue'),
+        meta: {
+          auth: 'required',
+          application: 'WH_PROD_SUPPLY'
+        }
+      }
+    ]
+  },
+  {
+    path: '/mkt',
+    component: () => import('src/layouts/appLayout.vue'),
+    meta: {
+      auth: 'required',
+      title: ''
+    },
+    children: [
+      {
+        path: 'contacts',
+        name: 'rtMktContacts',
+        component: () => import('src/components/app/mkt/contacts/mktContactsComponent.vue'),
+        meta: {
+          auth: 'required',
+          application: 'MKT_CONTACTS'
+        }
       }
     ]
   },

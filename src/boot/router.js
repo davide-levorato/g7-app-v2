@@ -75,9 +75,13 @@ export default boot (({ router, store }) => {
       } catch (e) {
         console.error(e)
         redirectToLogin(next, {})
+        return
       }
-    } else {
+    }
+
+    if (authRequired) {
       redirectToLogin(next, {})
+      return
     }
   })
 

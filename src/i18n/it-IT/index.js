@@ -206,6 +206,18 @@ export default {
       title: 'Ingresso merce',
       browserTitle: 'Ingresso merce',
       menuLabel: 'Ingresso merce'
+    },
+    WH_PROD_SUPPLY: {
+      name: 'Approvigionamento Produzione',
+      title: 'Approvigionamento Produzione',
+      browserTitle: 'Approvigionamento Produzione',
+      menuLabel: 'Approvigionamento Produzione'
+    },
+    MKT_CONTACTS: {
+      name: 'Contatti',
+      title: 'Contatti',
+      browserTitle: 'Contatti',
+      menuLabel: 'Contatti'
     }
   },
   common: {

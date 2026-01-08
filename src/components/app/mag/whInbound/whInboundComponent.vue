@@ -17,7 +17,7 @@
     </div>
     <div class="row" v-if="selectedDoc && !selectedUdc">
       <div class="col-xs-12">
-        <wh-inbound-doc-rows-component :ddt="selectedDocData" :ddtRows="selectedDocRowsData" @closeDoc="onCloseDoc"></wh-inbound-doc-rows-component>
+        <wh-inbound-doc-rows-component :ddt="selectedDocData" :ddtComplete="selectedDocComplete" :ddtRows="selectedDocRowsData" :showInput="showInput" @closeDoc="onCloseDoc" @completeDoc="onCloseDoc"></wh-inbound-doc-rows-component>
       </div>
     </div>
     <div class="row" v-if="selectedDoc && selectedUdc">
@@ -107,6 +107,11 @@ const batteryStatusLevel = ref(0)
 const batteryStatusPlugged = ref(false)
 
 const selectedDoc = ref(false)
+const selectedDocComplete = ref({
+  complete: false,
+  qta: 0,
+  qtaCar: 0
+})
 const selectedDocData = ref({})
 const selectedDocRowsData = ref([])
 const selectedDocRowData = ref({})
@@ -356,7 +361,18 @@ const onCloseUdc = function () {
 const onLoadDocRows = function(nroDoc) {
   const f = { nroDdt: nroDoc }
   serviceStore.apiCall(apiGetData, { obj: 'WH_INBOUND_DOC_ROWS', q: { qS: '', gR: {}, qC: 'all', qF: f, qPg: { pN: 1, pS: 250 } }, gridRequest: false }, true).then(function(r) {
-    selectedDocRowsData.value = _.get(r, 'rows', [])
+    const rws = _.get(r, 'rows', [])
+    selectedDocRowsData.value = rws
+
+    var qta = 0
+    var qtaCar = 0
+    for (var i = 0; i < rws.length; i++) {
+      qta = qta + rws[i].qta
+      qtaCar = qtaCar + rws[i].qtaCar
+    }
+    selectedDocComplete.value.complete = qta === qtaCar
+    selectedDocComplete.value.qta = qta
+    selectedDocComplete.value.qtaCar = qtaCar
   })
 }
 </script>

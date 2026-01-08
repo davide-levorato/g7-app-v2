@@ -1,6 +1,6 @@
 <template>
 <q-list separator>
-  <q-item-label header>Lista DDT ingresso merce</q-item-label>
+  <q-item-label header>Lista DDT ingresso merce  <q-btn flat icon="fal fa-sync" @click="refreshData"></q-btn></q-item-label>
   <template v-for="d in inboundDocs" :key="`wmDoc${d.nroDdt}`">
     <q-item clickable @click="onSelectDoc(d)">
       <q-item-section>
@@ -36,7 +36,6 @@ onMounted(() => {
   refreshData()
 })
 
-
 const refreshData = function () {
   serviceStore.apiCall(apiGetData, { obj: 'WH_INBOUND_DOCS', q: { qS: '', gR: {}, qC: 'all', qF: {}, qPg: { pN: 1, pS: 25 } }, gridRequest: false }, true).then(function(r) {
     inboundDocs.value = _.get(r, 'rows', [])
@@ -46,6 +45,4 @@ const refreshData = function () {
 const onSelectDoc = function (doc) {
   emit('selectDoc', doc)
 }
-
-
 </script>
