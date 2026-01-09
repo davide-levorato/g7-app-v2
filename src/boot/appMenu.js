@@ -65,7 +65,7 @@ const APP_MENU = [
       miniMode: true,
       normalMode: true
     },
-    items: [{
+    items: [/* {
       name: 'Mag002',
       type: 'mi',
       userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'MAG_INV'}],
@@ -76,7 +76,7 @@ const APP_MENU = [
       },
       route: { name: 'rtMagInv' },
       action: {}
-    }, {
+    }, */ {
       name: 'Mag100',
       type: 'mi',
       userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'WH_INBOUND'}],
@@ -101,7 +101,7 @@ const APP_MENU = [
     }
     ]
   },
-  {
+  /* {
     name: 'Mkt',
     type: 'ei',
     userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'all'}],
@@ -124,7 +124,7 @@ const APP_MENU = [
       route: { name: 'rtMktContacts' },
       action: {}
     }]
-  },
+  }, */
   {
     name: 'logout',
     type: 'mi',

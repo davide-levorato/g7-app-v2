@@ -11,13 +11,13 @@
       l'utente deve selezionarne una
      -->
     <div class="row" v-if="!selectedDoc">
-      <div class="col-xs-12">
+      <div class="col-xs-12 q-pb-xl">
         <wh-inbound-docs-component @selectDoc="onSelectDoc"></wh-inbound-docs-component>
       </div>
     </div>
     <div class="row" v-if="selectedDoc && !selectedUdc">
       <div class="col-xs-12">
-        <wh-inbound-doc-rows-component :ddt="selectedDocData" :ddtComplete="selectedDocComplete" :ddtRows="selectedDocRowsData" :showInput="showInput" @closeDoc="onCloseDoc" @completeDoc="onCloseDoc"></wh-inbound-doc-rows-component>
+        <wh-inbound-doc-rows-component :ddt="selectedDocData" :ddtComplete="selectedDocComplete" :ddtRows="selectedDocRowsData" :showInput="showInput" @closeDoc="onCloseDoc" @completeDoc="onCompleteDoc"></wh-inbound-doc-rows-component>
       </div>
     </div>
     <div class="row" v-if="selectedDoc && selectedUdc">
@@ -164,6 +164,15 @@ const onCheckText = function (text) {
   /* se ho selezionato un ddt ma non un udc allora verifico UDC
   */
   if (selectedDoc.value) {
+    if (selectedDocData.value.stato === 'C') {
+      vibrate('error')
+      q$.notify({
+        message: `Documento chiuso`,
+        color: 'red-6'
+      })
+      return;
+    }
+
     if (!selectedUdc.value) {
       serviceStore.apiCall(apiIdLabel, { check: ['LABEL_UDC'], barcode: text, options: { data: true }}, true).then(function(r) {
         const isUdc = _.get(r, 'data.labelTypeFound', false)
@@ -333,6 +342,10 @@ const onCloseDoc =  function() {
   lastBarcodeRead.value = ''
 }
 
+const onCompleteDoc = function () {
+  onCloseDoc()
+}
+
 const onUdcAssigned = function() {
   selectedUdc.value = false
   selectedUdcData.value = {}
@@ -344,6 +357,7 @@ const onUdcAssigned = function() {
 const onItemAssigned = function () {
   lastBarcodeRead.value = ''
   loadUdcData(selectedUdcData.value.barcode)
+  onLoadDocRows(selectedDocData.value.nroDdt)
 }
 
 const onUpdateUdc = function() {

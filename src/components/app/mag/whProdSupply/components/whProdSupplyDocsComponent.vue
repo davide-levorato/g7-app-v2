@@ -8,7 +8,7 @@
   </q-toolbar>
   <div class="row q-mt-sm" v-if="_.isEmpty(prodSupplyDocs)">
     <div class="col-xs-12 text-center q-py-xl">
-      <span class="text-grey-6 textsubtitle">Nessuna lista da visualizzare</span>
+      <span class="text-grey-6 text-subtitle">Nessuna lista da visualizzare</span>
     </div>
   </div>
   <div class="row q-mt-sm" v-else>
@@ -40,8 +40,7 @@
 import _ from 'lodash'
 import dayJs from 'dayjs'
 import { ref, onMounted, watch, computed } from 'vue'
-import { useQuasar } from 'quasar'
-
+import { useQuasar, LocalStorage } from 'quasar'
 import { useServiceStore } from 'stores/service'
 
 import { apiGetData } from 'api/data'
@@ -55,14 +54,14 @@ const q$ = useQuasar()
 const prodSupplyDocs = ref([])
 
 const listStyle = computed(() => {
-  const subTract = 176
+  const subTract = 226
   const h = q$.screen.height - subTract
   return `width: 100%; height:${h}px;`
 })
 
 const lineaProd = ref()
-const docType = ref(1)
-const docStatus = ref('A')
+const docType = ref(LocalStorage.getItem('lpType') ? LocalStorage.getItem('lpType') : 1)
+const docStatus = ref(LocalStorage.getItem('lpStatus') ? LocalStorage.getItem('lpStatus') : 'A')
 
 const lineeProd = ref([
   { value: 'L01', label: 'L01' },
@@ -81,11 +80,13 @@ onMounted(() => {
   refreshData()
 })
 
-watch(docType, function () {
+watch(docType, function (v) {
+  LocalStorage.set("lpType", v)
   refreshData()
 })
 
-watch(docStatus, function () {
+watch(docStatus, function (v) {
+  LocalStorage.set("lpStatus", v)
   refreshData()
 })
 
@@ -99,7 +100,7 @@ const refreshData = function () {
   }
 
   if (docStatus.value === 'A') {
-    f.stato = 'A'
+    f.stato = 'I'
   }
 
   if (lineaProd.value) {
@@ -111,10 +112,7 @@ const refreshData = function () {
   })
 }
 
-
 const onSelectDoc = function (doc) {
   emit('selectDoc', doc)
 }
-
-
 </script>

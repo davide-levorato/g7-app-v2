@@ -8,7 +8,7 @@ export const useApplicationStore = defineStore("application", {
     const locale = _.get(lSt, 'lang', 'itIt')
 
     return {
-      intAppVersion: '1.1.0',
+      intAppVersion: '1.1.3',
 
       intCurrentRoute: {},
 

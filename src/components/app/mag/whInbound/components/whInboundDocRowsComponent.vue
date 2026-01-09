@@ -6,8 +6,7 @@
       <div><span class="text-caption">Leggere UDC</span></div>
     </div>
     <div class="col-xs-4 text-right">
-      <!-- :disable="!ddtComplete.complete" -->
-      <q-btn  icon="fal fa-check-double" outline color="green-6" text-color="blue-4" label="Chiudi" size="md" @click="onCompleteDoc"></q-btn>
+      <q-btn :disable="!ddtComplete.complete||props.ddt.stato==='C'" icon="fal fa-check-double" outline color="green-6" text-color="blue-4" label="Chiudi" size="md" @click="onCompleteDoc"></q-btn>
     </div>
     <div class="col-xs-3 text-right">
       <q-btn icon="fal fa-arrow-right-from-dotted-line" outline color="blue-4" text-color="blue-4" size="md" @click="onCloseDoc"></q-btn>

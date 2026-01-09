@@ -9,6 +9,9 @@
         <q-item-label>Rif.: {{ d.rifDoc }} del {{ dayJs(d.dataDocFornitore).format('DD/MM/YYYY') }}</q-item-label>
         <q-item-label caption v-if="!_.isEmpty(d.note)">{{ d.note }}</q-item-label>
       </q-item-section>
+      <q-item-section side>
+        <q-icon v-if="d.stato === 'I'" name="fal fa-forklift" color="orange-6"></q-icon>
+      </q-item-section>
     </q-item>
   </template>
 </q-list>
@@ -37,7 +40,10 @@ onMounted(() => {
 })
 
 const refreshData = function () {
-  serviceStore.apiCall(apiGetData, { obj: 'WH_INBOUND_DOCS', q: { qS: '', gR: {}, qC: 'all', qF: {}, qPg: { pN: 1, pS: 25 } }, gridRequest: false }, true).then(function(r) {
+  const f = {
+    stato: ['N', 'I']
+  }
+  serviceStore.apiCall(apiGetData, { obj: 'WH_INBOUND_DOCS', q: { qS: '', gR: {}, qC: 'all', qF: f, qPg: { pN: 1, pS: 25 } }, gridRequest: false }, true).then(function(r) {
     inboundDocs.value = _.get(r, 'rows', [])
   })
 }
