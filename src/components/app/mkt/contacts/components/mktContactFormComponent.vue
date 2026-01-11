@@ -176,7 +176,6 @@ watch(fmContact, function(v) {
 })
 
 watchEffect(() => {
-  // `foo` transformed to `props.foo` by the compiler
   fmContact.id = props.contact.id
   fmContact.firstName = props.contact.firstName
   fmContact.lastName = props.contact.lastName

@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <div class="row" v-if="selectedDoc && !selectedUdc">
+  <div class="row" v-if="selectedDoc">
     <div class="col-xs-12">
       <wh-prod-supply-doc-rows-component :doc="selectedDocData" :docRows="selectedDocRowsData" @closeDoc="onCloseDoc"></wh-prod-supply-doc-rows-component>
     </div>
@@ -63,6 +63,7 @@
     </div>
   </q-page-sticky>
   <new-udc-dialog v-model="newUdcDialogShow"></new-udc-dialog>
+  <wms-udc-dialog v-model="showUdcDialog" :udc="selectedUdcData" :docData="selectedDocData" :docItems="selectedDocRowsData" :udcPickingData="udcPickingData" @itemAssigned="onItemAssigned"></wms-udc-dialog>
 </template>
 <!-- eslint-disable no-unused-vars -->
 <script setup>
@@ -74,11 +75,14 @@ import { useQuasar } from 'quasar'
 import { useApplicationStore } from 'stores/application'
 import { useServiceStore } from 'stores/service'
 
+import { apiIdLabel, apiUdcDelItem } from 'api/mag'
 import { apiGetData } from 'api/data'
 
 import newUdcDialog from 'dialogs/mag/newUdcDialog.vue'
 import whProdSupplyDocsComponent from './components/whProdSupplyDocsComponent.vue'
 import whProdSupplyDocRowsComponent from './components/whProdSupplyDocRowsComponent.vue'
+
+import wmsUdcDialog from './dialogs/wmsUdcDialog.vue'
 
 const emit = defineEmits(['selectDoc'])
 
@@ -101,6 +105,9 @@ const selectedUdcData = ref({})
 
 const showInput = ref(false)
 const inputText = ref('')
+
+const showUdcDialog = ref(false)
+const udcPickingData = ref({})
 
 onMounted(() => {
   if (applicationStore.deviceReady) {
@@ -146,6 +153,11 @@ const onSwitchInput = function () {
   showInput.value = !showInput.value
 }
 
+const onReadText = function () {
+  onCheckText(inputText.value)
+  inputText.value = ''
+}
+
 const onNewUdc = function() {
   newUdcDialogShow.value = true
 }
@@ -182,8 +194,75 @@ const vibrate = function (vibrationMessageType) {
 
 /* controlla una lettura effettuata tramite input o scanner */
 const onCheckText = function (text) {
-  /* se ho selezionato un ddt ma non un udc allora verifico UDC
+  /* se ho selezionato una ista di preliveo ma non un udc allora verifico la lettura di un udc
+    l'udc letto deve essere in magazzino e contenere un articolo in lista
+    se l'articolo non è in lista questo viene aggiunto
   */
+  if (selectedDoc.value) {
+    if (selectedDocData.value.stato === 'C') {
+      vibrate('error')
+      q$.notify({
+        message: `Documento chiuso`,
+        color: 'red-6'
+      })
+      return;
+    }
+  } else {
+    return
+  }
 
+  /* se non ho ancora selezionato un udc allora mi aspetto un UDC */
+  if (!selectedUdc.value) {
+    serviceStore.apiCall(apiIdLabel, { check: ['LABEL_UDC'], barcode: text, options: { data: true }}, true).then(function(r) {
+      const isUdc = _.get(r, 'data.labelTypeFound', false)
+      const udcData = _.get(r, 'data.labelData', {})
+
+      const udcBarcode = _.get(udcData, 'barcode', '')
+      const udcLocationId = _.get(udcData, 'locationId', 0)
+      const udcStatus = _.get(udcData, 'status', '')
+
+      if (!udcLocationId || udcStatus !== 'W') {
+        vibrate('error')
+        q$.notify({
+          message: `UDC ${udcBarcode} non valido`,
+          color: 'red-6'
+        })
+        return
+      }
+
+      selectedUdc.value = true
+      selectedUdcData.value = udcData
+      inputText.value = ''
+
+      showUdcDialog.value = true
+    })
+  } else {
+    /* cerco un secondo UDC per trasferimento PICKING */
+    serviceStore.apiCall(apiIdLabel, { check: ['LABEL_UDC'], barcode: text, options: { data: false }}, true).then(function(r) {
+      const isUdc = _.get(r, 'data.labelTypeFound', false)
+      const udcData = _.get(r, 'data.labelData', {})
+
+      const udcBarcode = _.get(udcData, 'barcode', '')
+      const udcLocationId = _.get(udcData, 'locationId', 0)
+      const udcStatus = _.get(udcData, 'status', '')
+
+      if (udcLocationId || (udcStatus !== 'N' && udcStatus !== 'G')) {
+        vibrate('error')
+        q$.notify({
+          message: `UDC ${udcBarcode} non valido`,
+          color: 'red-6'
+        })
+        return
+      }
+
+      udcPickingData.value = udcData
+    })
+  }
+
+
+}
+
+const onItemAssigned = function () {
+  onLoadDocRows(selectedDocData.value.id)
 }
 </script>

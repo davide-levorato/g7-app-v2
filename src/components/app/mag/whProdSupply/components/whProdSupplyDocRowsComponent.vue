@@ -19,7 +19,7 @@
                 <div class="row no-wrap full-width" >
                   <div class="col-xs-6 text-left q-py-xs"><span class="text-bold">{{ r.codArticolo }}</span></div>
                   <div :class="'col-xs-3 text-right q-py-xs q-pr-xs ' + (r.qta===r.qtaLetta?'bg-green-3':'bg-red-3')" style="border:1px solid #cdcdcd;">{{ _.round(r.qta, 0) }} {{ r.codUm }}</div>
-                  <div :class="'col-xs-3 text-right q-py-xs q-pr-xs ' + (r.qta===r.qtaLetta?'bg-green-3':'bg-red-3')" style="border:1px solid #cdcdcd;">{{ _.round(r.qtaLetta, 0) }} {{ r.codUm }}</div>
+                  <div :class="'col-xs-3 text-right q-py-xs q-pr-xs ' + (r.qta===r.qtaLetta?'bg-green-3':(r.qtaLetta>0?'bg-orange-3':''))" style="border:1px solid #cdcdcd;">{{ _.round(r.qtaLetta, 0) }} {{ r.codUm }}</div>
                 </div>
               </q-item-label>
               <q-item-label>{{ r.descrArticolo }}</q-item-label>
@@ -30,7 +30,7 @@
       </q-list>
     </q-card-section>
   </q-card>
-  <wms-item-dialog v-model="wmsItemDialogShow" :item="wmsItem"></wms-item-dialog>
+  <wms-item-dialog v-model="wmsItemDialogShow" :doc="doc" :item="wmsItem"></wms-item-dialog>
 </q-scroll-area>
 </template>
 <!-- eslint-disable no-unused-vars -->

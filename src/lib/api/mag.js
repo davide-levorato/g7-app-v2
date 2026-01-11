@@ -7,11 +7,15 @@ const udcSetLocation = '/mag/udc/location'
 
 const inboundDocComplete = '/mag/aqtddt/complete'
 
+const lpSetItem = '/mag/lp/item'
+
 export {
   printUdc as apiPrintUdc,
   idLabel as apiIdLabel,
   udcSetItem as apiUdcSetItem,
   udcDelItem as apiUdcDelItem,
   udcSetLocation as apiUdcSetLocation,
-  inboundDocComplete as apiInboundDocComplete
+  inboundDocComplete as apiInboundDocComplete,
+
+  lpSetItem as apiLpSetItem
 }
