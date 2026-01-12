@@ -32,7 +32,7 @@
   <q-page-sticky expand position="bottom" :offset="[18, 18]">
     <div class="row full-width">
       <div class="col-xs-6 text-left">
-        <q-btn rounded outline icon="fal fa-screwdriver-wrench" color="blue-4" text-color="blue-4" size="lg">
+        <q-btn rounded outline icon="fal fa-screwdriver-wrench" color="blue-4" text-color="blue-4" size="sm">
           <q-menu>
           <q-card style="min-width:300px;">
             <q-card-section class="q-pa-none">
@@ -58,12 +58,12 @@
         </q-btn>
       </div>
       <div class="col-xs-6 text-right">
-        <q-btn rounded icon="fal fa-raygun" color="yellow-4" text-color="black" size="lg" @click="onScan"></q-btn>
+        <q-btn rounded icon="fal fa-raygun" color="yellow-4" text-color="black" size="sm" @click="onScan"></q-btn>
       </div>
     </div>
   </q-page-sticky>
   <new-udc-dialog v-model="newUdcDialogShow"></new-udc-dialog>
-  <wms-udc-dialog v-model="showUdcDialog" :udc="selectedUdcData" :docData="selectedDocData" :docItems="selectedDocRowsData" :udcPickingData="udcPickingData" @itemAssigned="onItemAssigned"></wms-udc-dialog>
+  <wms-udc-dialog v-model="showUdcDialog" :udc="selectedUdcData" :docData="selectedDocData" :docItems="selectedDocRowsData" :udcPickingData="udcPickingData" @itemAssigned="onItemAssigned" @cancel="onCancel"></wms-udc-dialog>
 </template>
 <!-- eslint-disable no-unused-vars -->
 <script setup>
@@ -146,6 +146,11 @@ const onSelectDoc = function(doc) {
 const onCloseDoc = function () {
   selectedDoc.value = false
   selectedDocData.value = {}
+
+  selectedUdc.value = false
+  selectedUdcData.value = {}
+  udcPickingData.value = {}
+
   selectedDocRowsData.value = []
 }
 
@@ -258,11 +263,18 @@ const onCheckText = function (text) {
       udcPickingData.value = udcData
     })
   }
+}
 
-
+const onCancel = function () {
+  selectedUdc.value = false
+  selectedUdcData.value = {}
+  udcPickingData.value = {}
 }
 
 const onItemAssigned = function () {
+  selectedUdc.value = false
+  selectedUdcData.value = {}
+  udcPickingData.value = {}
   onLoadDocRows(selectedDocData.value.id)
 }
 </script>

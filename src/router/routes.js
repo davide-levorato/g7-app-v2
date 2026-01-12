@@ -52,6 +52,15 @@ const routes = [
           auth: 'required',
           application: 'WH_PROD_SUPPLY'
         }
+      },
+      {
+        path: 'whMov',
+        name: 'rtWhMov',
+        component: () => import('src/components/app/mag/whMov/whMovComponent.vue'),
+        meta: {
+          auth: 'required',
+          application: 'WH_MOV'
+        }
       }
     ]
   },
@@ -70,6 +79,25 @@ const routes = [
         meta: {
           auth: 'required',
           application: 'MKT_CONTACTS'
+        }
+      }
+    ]
+  },
+  {
+    path: '/prd',
+    component: () => import('src/layouts/appLayout.vue'),
+    meta: {
+      auth: 'required',
+      title: ''
+    },
+    children: [
+      {
+        path: 'scar',
+        name: 'rtPrdScar',
+        component: () => import('src/components/app/prd/prdScar/prdScarComponent.vue'),
+        meta: {
+          auth: 'required',
+          application: 'PRD_SCAR'
         }
       }
     ]

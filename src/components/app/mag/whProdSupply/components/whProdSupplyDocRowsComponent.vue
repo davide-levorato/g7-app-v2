@@ -7,22 +7,22 @@
 </q-toolbar>
 <q-scroll-area :style="areaStyle">
   <q-card>
-    <q-card-section class="q-pa-xs">
+    <q-card-section class="q-py-xs q-px-none">
       <q-list separator>
         <template v-for="r in docRows" :key="`wmDoc${r.idRigaDdt}`">
-          <q-item clickable @click="onWmsItem(r)">
+          <q-item clickable @click="onWmsItem(r)" style="padding-right:2px;">
             <q-item-section thumbnail>
               <q-icon name="fal fa-box-magnifying-glass" size="xs"></q-icon>
             </q-item-section>
             <q-item-section>
               <q-item-label class="q-pa-none" style="height:30px; padding: 0px !important;">
                 <div class="row no-wrap full-width" >
-                  <div class="col-xs-6 text-left q-py-xs"><span class="text-bold">{{ r.codArticolo }}</span></div>
-                  <div :class="'col-xs-3 text-right q-py-xs q-pr-xs ' + (r.qta===r.qtaLetta?'bg-green-3':'bg-red-3')" style="border:1px solid #cdcdcd;">{{ _.round(r.qta, 0) }} {{ r.codUm }}</div>
-                  <div :class="'col-xs-3 text-right q-py-xs q-pr-xs ' + (r.qta===r.qtaLetta?'bg-green-3':(r.qtaLetta>0?'bg-orange-3':''))" style="border:1px solid #cdcdcd;">{{ _.round(r.qtaLetta, 0) }} {{ r.codUm }}</div>
+                  <div class="col-xs-4 text-left q-py-xs"><span class="text-bold">{{ r.codArticolo }}</span></div>
+                  <div :class="'col-xs-4 text-right q-py-xs q-pr-xs ' + (r.qta===r.qtaLetta?'bg-green-3':'bg-red-3')" style="border:1px solid #cdcdcd;">{{ _.round(r.qta, 0) }} {{ r.codUm }}</div>
+                  <div :class="'col-xs-4 text-right q-py-xs q-pr-xs ' + (r.qta===r.qtaLetta?'bg-green-3':(r.qtaLetta>0?'bg-orange-3':''))" style="border:1px solid #cdcdcd;">{{ _.round(r.qtaLetta, 0) }} {{ r.codUm }}</div>
                 </div>
               </q-item-label>
-              <q-item-label>{{ r.descrArticolo }}</q-item-label>
+              <q-item-label caption>{{ r.descrArticolo }}</q-item-label>
               <q-item-label caption v-if="!_.isEmpty(r.note)">{{ r.note }}</q-item-label>
             </q-item-section>
           </q-item>
@@ -56,7 +56,7 @@ onMounted(() => {
 })
 
 const areaStyle = computed(() => {
-  const subTract = 270
+  const subTract = 170
   const h = q$.screen.height - subTract
   return `width: 100%; height:${h}px;`
 })

@@ -213,6 +213,18 @@ export default {
       browserTitle: 'Approvigionamento Produzione',
       menuLabel: 'Approvigionamento Produzione'
     },
+    WH_MOV: {
+      name: 'Movimentazione',
+      title: 'Movimentazione',
+      browserTitle: 'Movimentazione',
+      menuLabel: 'Movimentazione'
+    },
+    PRD_SCAR: {
+      name: 'Scarico produzione',
+      title: 'Scarico produzione',
+      browserTitle: 'Scarico produzione',
+      menuLabel: 'Scarico produzione'
+    },
     MKT_CONTACTS: {
       name: 'Contatti',
       title: 'Contatti',

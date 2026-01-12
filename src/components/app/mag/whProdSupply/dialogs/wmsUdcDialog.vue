@@ -64,7 +64,7 @@
         </div>
         <div v-if="picking" class="row q-mt-sm q-pa-none">
           <div class="col-xs-12 q-px-sm self-center">
-            <q-input :autofocus outlined v-model="udcTargetPicking" hide-bottom-space label="UDC Trasferimento"></q-input>
+            <q-input autofocus outlined v-model="udcTargetPicking" hide-bottom-space label="UDC Trasferimento"></q-input>
           </div>
         </div>
         <div v-if="!result" class="row q-mt-sm">
@@ -208,6 +208,8 @@ watch(dlgModel, function(v) {
 const onCancel = function () {
   r$.$reset()
   r$.$value.itemQty = null
+
+
   dlgModel.value = false
 }
 

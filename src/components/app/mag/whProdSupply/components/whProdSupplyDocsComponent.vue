@@ -100,7 +100,7 @@ const refreshData = function () {
   }
 
   if (docStatus.value === 'A') {
-    f.stato = ['I', 'S']
+    f.stato = ['I', 'S', 'P']
   }
 
   if (lineaProd.value) {

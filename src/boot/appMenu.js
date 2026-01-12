@@ -98,10 +98,45 @@ const APP_MENU = [
       },
       route: { name: 'rtWhProdSupply' },
       action: {}
+    }, {
+      name: 'Mag120',
+      type: 'mi',
+      userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'WH_MOV'}],
+      application: 'WH_MOV',
+      visible: {
+        miniMode: true,
+        normalMode: true
+      },
+      route: { name: 'rtWhMov' },
+      action: {}
     }
     ]
   },
-  /* {
+  {
+    name: 'Prd',
+    type: 'ei',
+    userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'all'}],
+    application: '',
+    icon: 'fal fa-industry-windows',
+    label: 'Produzione',
+    visible: {
+      miniMode: true,
+      normalMode: true
+    },
+    items: [{
+      name: 'Prd001',
+      type: 'mi',
+      userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'PRD_SCAR'}],
+      application: 'PRD_SCAR',
+      visible: {
+        miniMode: true,
+        normalMode: true
+      },
+      route: { name: 'rtPrdScar' },
+      action: {}
+    }]
+  },
+  {
     name: 'Mkt',
     type: 'ei',
     userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'all'}],
@@ -124,7 +159,7 @@ const APP_MENU = [
       route: { name: 'rtMktContacts' },
       action: {}
     }]
-  }, */
+  },
   {
     name: 'logout',
     type: 'mi',

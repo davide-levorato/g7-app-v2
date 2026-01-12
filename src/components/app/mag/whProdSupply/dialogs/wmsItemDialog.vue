@@ -45,7 +45,15 @@
           </q-tab-panel>
           <q-tab-panel name="lpItems" class="q-pa-none">
             <q-scroll-area :style="listStyle">
-              {{ wmsItemListData }}
+              <q-list separator>
+                <q-item v-for="l in wmsItemListData" :key="`item${l.id}`">
+                  <q-item-section>
+                    <q-item-label class="text-bold">{{ l.codArticolo }}</q-item-label>
+                    <q-item-label>UDC: {{ l.udc }} - Lotto: {{ l.codLotto }}</q-item-label>
+                    <q-item-label>Qta: {{ l.qta }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
             </q-scroll-area>
           </q-tab-panel>
         </q-tab-panels>
