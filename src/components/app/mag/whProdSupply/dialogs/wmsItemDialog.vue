@@ -123,7 +123,7 @@ const refreshData = function () {
   serviceStore.apiCall(apiGetData, { obj: 'WH_PROD_SUPPLY_DOC_ROW_ITEMS', q: { qS: '', gR: {}, qC: 'all', qF: {
     idLista: props.doc.id,
     idArticolo: props.item.idArticolo
-  }, qPg: { pN: 1, pS: 25 } }, gridRequest: false }, true).then(function(r) {
+  }, qPg: { pN: 1, pS: 250 } }, gridRequest: false }, true).then(function(r) {
     wmsItemListData.value = _.get(r, 'rows', [])
   })
 }

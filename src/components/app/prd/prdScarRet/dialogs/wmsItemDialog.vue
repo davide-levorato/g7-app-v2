@@ -29,7 +29,7 @@
         </div>
         <div class="row q-mt-sm q-pa-none">
           <div class="col-xs-12 q-px-sm self-center">
-            <q-input autofocus outlined v-model.number="r$.$value.itemQty" hide-bottom-space label="Quantità prelevata" :error="formField.error(r$, 'itemQty')" :error-message="formField.message(r$, 'itemQty')" >
+            <q-input autofocus outlined v-model.number="r$.$value.itemQty" hide-bottom-space label="Quantità reso" :error="formField.error(r$, 'itemQty')" :error-message="formField.message(r$, 'itemQty')" >
               <template v-slot:append>
                 {{ item.codUmGestione }}
               </template>
@@ -49,7 +49,7 @@
       </q-card-section>
       <q-card-actions align="right">
         <q-btn no-caps label="Annulla" @click="onCancel"></q-btn>
-        <q-btn no-caps icon="fal fa-save" color="green-6" label="Preleva" @click="onAssignItem"></q-btn>
+        <q-btn no-caps icon="fal fa-save" color="green-6" label="Rendi" @click="onAssignItem"></q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -66,18 +66,10 @@ import { required, minValue, maxValue, number, withMessage } from '@regle/rules'
 import { useFormField } from 'src/components/common/form/useFormField'
 import { useI18n } from 'vue-i18n'
 
-import { apiMagProd } from 'api/mag'
+import { apiMagProdRet } from 'api/mag'
 
 const props = defineProps({
-  doc: {
-    type: Object,
-    default: function() { return {}}
-  },
   itemData: {
-    type: Object,
-    default: function() { return {}}
-  },
-  lotData: {
     type: Object,
     default: function() { return {}}
   }
@@ -121,7 +113,6 @@ const lot = ref({})
 
 watchEffect(() => {
   item.value = props.itemData
-  lot.value = props.lotData
 })
 
 watch(dlgModel, function(v) {
@@ -149,13 +140,13 @@ const onAssignItem = async function () {
 
   if (valid) {
     const p = {
-      idPpt: props.doc.id,
-      itemId: item.value.idArticolo,
-      lotId: !_.isEmpty(lot.value) ? lot.value.idLotto : null,
+      idPpt: item.value.idPpt,
+      itemId: item.value.itemId,
+      lotId: item.value.lotId ? item.value.lotId : null,
       qty: r$.$value.itemQty
     }
 
-    const r = await serviceStore.apiCall(apiMagProd, p, true)
+    const r = await serviceStore.apiCall(apiMagProdRet, p, true)
 
     result.value = _.get(r, 'data.result', false)
     resultMessage.value = _.get(r, 'data.message', '')

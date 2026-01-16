@@ -16,7 +16,7 @@
       </div>
     </div>
     <div v-else>
-      <prod-doc-rows-component :doc="selectedDocData" :docRows="selectedDocRowsData" @closeDoc="onCloseDoc" @deleteItem="onDeleteItem"></prod-doc-rows-component>
+      <prod-doc-rows-component :doc="selectedDocData" :docRows="selectedDocRowsData" @closeDoc="onCloseDoc" @scarItem="scarItem"></prod-doc-rows-component>
     </div>
   </div>
   <q-page-sticky expand position="top">
@@ -58,7 +58,7 @@
       </div>
     </div>
   </q-page-sticky>
-  <wms-item-dialog v-model="itemDialogShow" :doc="selectedDocData" :itemData="selectedItemData" :lotData="selectedLotData" @itemAssigned="onItemAssigned"></wms-item-dialog>
+  <wms-item-dialog v-model="itemDialogShow" :itemData="selectedItemData" @itemAssigned="onItemAssigned"></wms-item-dialog>
 </template>
 <!-- eslint-disable no-unused-vars -->
 <script setup>
@@ -149,7 +149,7 @@ const loadDocRows = function() {
   const f = {
     idPpt: selectedDocData.value.id
   }
-  serviceStore.apiCall(apiGetData, { obj: 'WMS_PROD_DOC_ITEMS', q: { qS: '', gR: {}, qC: 'all', qF: f, qPg: { pN: 1, pS: 250 } }, gridRequest: false }, true).then(function(r) {
+  serviceStore.apiCall(apiGetData, { obj: 'WMS_PROD_DOC_ITEM_SCARS', q: { qS: '', gR: {}, qC: 'all', qF: f, qPg: { pN: 1, pS: 250 } }, gridRequest: false }, true).then(function(r) {
     selectedDocRowsData.value = _.get(r, 'rows', [])
   })
 }
@@ -194,8 +194,9 @@ const onSelectDoc = function(doc) {
   loadDocRows()
 }
 
-const onDeleteItem = function () {
-  loadDocRows()
+const scarItem = function (item) {
+  selectedItemData.value = item
+  itemDialogShow.value = true
 }
 
 const onCloseDoc = function () {

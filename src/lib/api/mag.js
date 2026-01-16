@@ -10,6 +10,7 @@ const inboundDocComplete = '/mag/aqtddt/complete'
 const lpSetItem = '/mag/lp/item'
 const magMov = '/mag/mov'
 const magProd = '/mag/prod'
+const magProdRet = '/mag/prod-ret'
 
 export {
   printUdc as apiPrintUdc,
@@ -22,5 +23,6 @@ export {
   lpSetItem as apiLpSetItem,
 
   magMov as apiMagMov,
-  magProd as apiMagProd
+  magProd as apiMagProd,
+  magProdRet as apiMagProdRet
 }

@@ -53,7 +53,7 @@
   <q-page-sticky expand position="bottom" :offset="[18, 18]">
     <div class="row full-width">
       <div class="col-xs-6 text-left">
-        <q-btn rounded outline icon="fal fa-screwdriver-wrench" color="blue-4" text-color="blue-4" size="lg">
+        <q-btn rounded outline icon="fal fa-screwdriver-wrench" color="blue-4" text-color="blue-4" size="sm">
           <q-menu>
           <q-card style="min-width:300px;">
             <q-card-section class="q-pa-none">
@@ -79,7 +79,7 @@
         </q-btn>
       </div>
       <div class="col-xs-6 text-right">
-        <q-btn rounded icon="fal fa-raygun" color="yellow-4" text-color="black" size="lg" @click="onScan"></q-btn>
+        <q-btn rounded icon="fal fa-raygun" color="yellow-4" text-color="black" size="sm" @click="onScan"></q-btn>
       </div>
     </div>
   </q-page-sticky>

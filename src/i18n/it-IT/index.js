@@ -225,6 +225,12 @@ export default {
       browserTitle: 'Scarico produzione',
       menuLabel: 'Scarico produzione'
     },
+    PRD_SCAR_RET: {
+      name: 'Resi produzione',
+      title: 'Resi produzione',
+      browserTitle: 'Resi produzione',
+      menuLabel: 'Resi produzione'
+    },
     MKT_CONTACTS: {
       name: 'Contatti',
       title: 'Contatti',

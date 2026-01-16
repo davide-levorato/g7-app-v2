@@ -43,7 +43,8 @@
         <template v-if="transactionType.location">
           <div class="row q-mt-sm q-pa-none">
             <div class="col-xs-12 q-px-sm self-center">
-              <q-input autofocus outlined v-model="locationTarget" hide-bottom-space label="Vano Trasferimento"></q-input>
+              <q-input autofocus outlined v-model="locationTarget" hide-bottom-space label="Vano Trasferimento" @update:model-value="onUpdateLocation"></q-input>
+              <div class="q-px-sm q-py-sm text-bold" v-if="!_.isEmpty(locationTargetData)">{{ locationTargetData.barcode }}</div>
             </div>
           </div>
         </template>
@@ -59,7 +60,8 @@
           </div>
           <div v-if="picking" class="row q-mt-sm q-pa-none">
             <div class="col-xs-12 q-px-sm self-center">
-              <q-input autofocus outlined v-model="udcTargetPicking" hide-bottom-space label="UDC Trasferimento"></q-input>
+              <q-input autofocus outlined v-model="udcTargetPicking" hide-bottom-space label="UDC Trasferimento" @update:model-value="onUpdateUDCPicking"></q-input>
+              <div class="q-px-sm q-py-sm text-bold" v-if="!_.isEmpty(udcTargetPickingData)">{{ udcTargetPickingData.barcode }}</div>
             </div>
           </div>
         </template>
@@ -94,6 +96,8 @@ import { useFormField } from 'src/components/common/form/useFormField'
 import { useI18n } from 'vue-i18n'
 
 import { apiMagMov } from 'api/mag'
+
+import { apiIdLabel, apiUdcDelItem } from 'api/mag'
 
 const props = defineProps({
   udc: {
@@ -187,6 +191,18 @@ watch(dlgModel, function(v) {
 
     r$.$reset()
 
+    picking.value = false
+
+    locationTargetData.value = {}
+    locationTarget.value = ''
+
+    itemTargetData.value = {}
+    itemTarget.value = ''
+
+    udcTargetPickingData.value = {}
+    udcTargetPicking.value = ''
+
+
     const udcItems = _.get(props.udc, 'items', [])
     if (!_.isEmpty(udcItems)) {
       item.value = udcItems[0]
@@ -248,5 +264,26 @@ const onAssignItem = async function () {
       dlgModel.value = false
     }
   }
+}
+
+const onUpdateLocation = function(loc) {
+  serviceStore.apiCall(apiIdLabel, { check: ['LABEL_LOCATION'], barcode: loc, options: { data: true }}, true).then(function(r) {
+    const labelType = _.get(r, 'data.labelType', '')
+
+    if (labelType === 'LABEL_LOCATION') {
+      locationTargetData.value = _.get(r, 'data.labelData', {})
+    }
+  })
+}
+
+const onUpdateUDCPicking = function(udc) {
+  serviceStore.apiCall(apiIdLabel, { check: ['LABEL_UDC'], barcode: udc, options: { data: true }}, true).then(function(r) {
+    const labelType = _.get(r, 'data.labelType', '')
+
+    if (labelType === 'LABEL_UDC') {
+      udcTargetPickingData.value = _.get(r, 'data.labelData', {})
+      udcTargetPicking.value = _.get(r, 'data.labelData.barcode', '')
+    }
+  })
 }
 </script>

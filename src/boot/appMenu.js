@@ -134,6 +134,17 @@ const APP_MENU = [
       },
       route: { name: 'rtPrdScar' },
       action: {}
+    }, {
+      name: 'Prd002',
+      type: 'mi',
+      userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'PRD_SCAR_RET'}],
+      application: 'PRD_SCAR_RET',
+      visible: {
+        miniMode: true,
+        normalMode: true
+      },
+      route: { name: 'rtPrdScarRet' },
+      action: {}
     }]
   },
   {

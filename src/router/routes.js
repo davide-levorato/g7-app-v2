@@ -99,6 +99,15 @@ const routes = [
           auth: 'required',
           application: 'PRD_SCAR'
         }
+      },
+      {
+        path: 'scar',
+        name: 'rtPrdScarRet',
+        component: () => import('src/components/app/prd/prdScarRet/prdScarRetComponent.vue'),
+        meta: {
+          auth: 'required',
+          application: 'PRD_SCAR_RET'
+        }
       }
     ]
   },

@@ -18,9 +18,6 @@
       <span class="">{{ doc.descrArticolo }}</span>
     </div>
   </div>
-  <div class="text-caption text-center q-pa-md">
-    <span>Leggere Etichetta articolo</span>
-  </div>
   <q-scroll-area :style="listStyle">
     <q-list separator>
       <template v-for="r in docRows" :key="`wmDow${r.idRigaDdt}`">
@@ -33,12 +30,13 @@
             <q-item-label>{{ r.codLotto }}</q-item-label>
           </q-item-section>
           <q-item-section side>
-            <div class="row no-wrap">
-              <div class="col-xs-6 text-bold">{{ r.qty }} {{ r.codUm }}</div>
-              <div class="col-xs-6">
-                <q-btn flat icon="fal fa-trash-alt" color="red-6" @click="onDeleteItem(r)"></q-btn>
+              <div class="text-right">Prel: {{ r.qtyCar }} {{ r.codUm }}</div>
+              <div class="text-right">
+                  Reso: {{ r.qtyScar }} {{ r.codUm }}
               </div>
-            </div>
+              <div class="text-right q-py-xs">
+                <q-btn flat no-caps icon="fal fa-box-arrow-up" label="Reso" @click="onScarItem(r)"></q-btn>
+              </div>
           </q-item-section>
         </q-item>
       </template>
@@ -57,7 +55,7 @@ import { useServiceStore } from 'stores/service'
 const serviceStore = useServiceStore()
 import { apiDelData } from 'api/data'
 
-const emit = defineEmits(['selectDocRows', 'closeDoc', 'deleteItem'])
+const emit = defineEmits(['selectDocRows', 'closeDoc', 'scarItem'])
 
 const q$ = useQuasar()
 
@@ -74,33 +72,15 @@ const onCloseDoc = function () {
   emit('closeDoc')
 }
 
-const onDeleteItem = function (item) {
-  q$.dialog({
-    title: 'Conferma eliminazione',
-    message: `Eliminare la lettura?`,
-    cancel: {
-      label: 'Annulla',
-      'no-caps': true
-    },
-    ok: {
-      label: 'Elimina',
-      push: true,
-      icon: 'fal fa-trash-alt',
-      color: 'negative',
-      'no-caps': true
-    },
-    persistent: true
-  }).onOk( async () => {
-    serviceStore.apiCall(apiDelData, { obj: 'WMS_PROD_DOC_ITEMS', recordId: item.id, params: {}}, true).then(function() {
-      emit('deleteItem')
-    })
-  })
-}
 
 const listStyle = computed(() => {
   const subTract = 170 + (props.showInput ? 55 : 0)
   const h = q$.screen.height - subTract
   return `width: 100%; height:${h}px;`
 })
+
+const onScarItem = function(r) {
+  emit('scarItem', r)
+}
 
 </script>
