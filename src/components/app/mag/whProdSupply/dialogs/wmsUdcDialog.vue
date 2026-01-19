@@ -67,6 +67,14 @@
             <q-input autofocus outlined v-model="udcTargetPicking" hide-bottom-space label="UDC Trasferimento"></q-input>
           </div>
         </div>
+        <div class="row q-mt-sm items-center">
+          <div class="col-xs-6 q-px-sm">
+            <q-toggle v-model="printLabels" label="St etichette"></q-toggle>
+          </div>
+          <div class="col-xs-6 q-px-sm">
+            <q-input autofocus outlined v-model.number="labelNumber" label="Num etich"></q-input>
+          </div>
+        </div>
         <div v-if="!result" class="row q-mt-sm">
           <div class="col-xs-12 q-px-sm">
            <q-banner rounded dense class="bg-red-6 text-white">
@@ -80,7 +88,7 @@
       </q-card-section>
       <q-card-actions align="right">
         <q-btn no-caps label="Annulla" @click="onCancel"></q-btn>
-        <q-btn no-caps icon="fal fa-save" color="green-6" label="Preleva" @click="onAssignItem"></q-btn>
+        <q-btn no-caps :disable="assigning" icon="fal fa-save" color="green-6" label="Preleva" @click="onAssignItem"></q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -130,6 +138,8 @@ const formState = {
   itemQty: null
 }
 
+const assigning = ref(false)
+
 const validators = reactive({
   itemQty: {
     required: withMessage(required, t('common.form.val.txtRequired')),
@@ -167,6 +177,9 @@ const picking = ref(false)
 
 const udcTargetPicking = ref('')
 
+const printLabels = ref(true)
+const labelNumber = ref(1)
+
 watchEffect(() => {
   udcTargetPicking.value = props.udcPickingData.barcode ? props.udcPickingData.barcode : ''
 })
@@ -175,6 +188,7 @@ watch(dlgModel, function(v) {
   if (v) {
     result.value = true
     resultMessage.value = ''
+    assigning.value = false
 
     r$.$reset()
 
@@ -220,20 +234,23 @@ const onAssignItem = async function () {
   resultMessage.value = ''
 
   if (valid) {
-
+    assigning.value = true
     const p = {
       idLista: props.docData.id,
       idUdcPrelievo: props.udc.id,
       idArticolo: item.value.itemId,
       qta: r$.$value.itemQty,
       picking: picking.value,
-      udcPicking: udcTargetPicking.value
+      udcPicking: udcTargetPicking.value,
+      print: { printLabels: printLabels.value, labelNumber: labelNumber.value }
     }
-
+    //
     const r = await serviceStore.apiCall(apiLpSetItem, p, true)
 
     result.value = _.get(r, 'data.result', false)
     resultMessage.value = _.get(r, 'data.message', '')
+
+    assigning.value = false
 
     if (result.value) {
       r$.$reset()
