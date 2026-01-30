@@ -99,6 +99,17 @@ const APP_MENU = [
       route: { name: 'rtWhProdSupply' },
       action: {}
     }, {
+      name: 'Mag130',
+      type: 'mi',
+      userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'WH_PROD_RETURN'}],
+      application: 'WH_PROD_RETURN',
+      visible: {
+        miniMode: true,
+        normalMode: true
+      },
+      route: { name: 'rtWhProdReturn' },
+      action: {}
+    }, {
       name: 'Mag120',
       type: 'mi',
       userRoles: [{r: 'SA', a:'all'}, {r: 'A', a:'all'}, {r: 'U', a:'WH_MOV'}],
@@ -110,7 +121,7 @@ const APP_MENU = [
       route: { name: 'rtWhMov' },
       action: {}
     }
-    ]
+  ]
   },
   {
     name: 'Prd',

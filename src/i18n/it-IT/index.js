@@ -219,6 +219,12 @@ export default {
       browserTitle: 'Movimentazione',
       menuLabel: 'Movimentazione'
     },
+    WH_PROD_RETURN: {
+      name: 'Rientro da produzione',
+      title: 'Rientro da produzione',
+      browserTitle: 'Rientro da produzione',
+      menuLabel: 'Rientro da produzione'
+    },
     PRD_SCAR: {
       name: 'Scarico produzione',
       title: 'Scarico produzione',

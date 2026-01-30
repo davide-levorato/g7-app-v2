@@ -54,6 +54,15 @@ const routes = [
         }
       },
       {
+        path: 'rtWhProdReturn',
+        name: 'rtWhProdReturn',
+        component: () => import('src/components/app/mag/whProdReturn/whProdReturnComponent.vue'),
+        meta: {
+          auth: 'required',
+          application: 'WH_PROD_RETURN'
+        }
+      },
+      {
         path: 'whMov',
         name: 'rtWhMov',
         component: () => import('src/components/app/mag/whMov/whMovComponent.vue'),

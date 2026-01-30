@@ -117,7 +117,7 @@ const refreshData = function () {
   const f = {
     idArticolo: props.item.idArticolo
   }
-  serviceStore.apiCall(apiGetData, { obj: 'WMS_ITEMS', q: { qS: '', gR: {}, qC: 'all', qF: f, qPg: { pN: 1, pS: 25 } }, gridRequest: false }, true).then(function(r) {
+  serviceStore.apiCall(apiGetData, { obj: 'WMS_ITEMS', q: { qS: '', gR: {}, qC: 'all', qF: f, qPg: { pN: 1, pS: 250 } }, gridRequest: false }, true).then(function(r) {
     wmsItemData.value = _.get(r, 'rows', [])
   })
   serviceStore.apiCall(apiGetData, { obj: 'WH_PROD_SUPPLY_DOC_ROW_ITEMS', q: { qS: '', gR: {}, qC: 'all', qF: {

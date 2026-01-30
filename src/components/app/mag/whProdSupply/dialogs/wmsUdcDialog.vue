@@ -64,7 +64,8 @@
         </div>
         <div v-if="picking" class="row q-mt-sm q-pa-none">
           <div class="col-xs-12 q-px-sm self-center">
-            <q-input autofocus outlined v-model="udcTargetPicking" hide-bottom-space label="UDC Trasferimento"></q-input>
+            <q-input autofocus outlined v-model="udcTargetPicking" hide-bottom-space label="UDC Trasferimento" @update:model-value="onUpdateUDCPicking"></q-input>
+            <div class="q-px-sm q-py-sm text-bold" v-if="!_.isEmpty(udcTargetPickingData)">{{ udcTargetPickingData.barcode }}</div>
           </div>
         </div>
         <div class="row q-mt-sm items-center">
@@ -99,6 +100,8 @@ import { ref, watch, computed, reactive, watchEffect } from 'vue'
 import _ from 'lodash'
 import { useQuasar } from 'quasar'
 import { useServiceStore } from 'src/stores/service.js'
+
+import { apiIdLabel, apiUdcDelItem } from 'api/mag'
 
 import { useRegle } from '@regle/core'
 import { required, minValue, maxValue, number, withMessage } from '@regle/rules'
@@ -176,6 +179,7 @@ const itemInList = ref(false)
 const picking = ref(false)
 
 const udcTargetPicking = ref('')
+const udcTargetPickingData = ref({})
 
 const printLabels = ref(true)
 const labelNumber = ref(1)
@@ -223,8 +227,18 @@ const onCancel = function () {
   r$.$reset()
   r$.$value.itemQty = null
 
-
   dlgModel.value = false
+}
+
+const onUpdateUDCPicking = function(udc) {
+  serviceStore.apiCall(apiIdLabel, { check: ['LABEL_UDC'], barcode: udc, options: { data: true }}, true).then(function(r) {
+    const labelType = _.get(r, 'data.labelType', '')
+
+    if (labelType === 'LABEL_UDC') {
+      udcTargetPickingData.value = _.get(r, 'data.labelData', {})
+      udcTargetPicking.value = _.get(r, 'data.labelData.barcode', '')
+    }
+  })
 }
 
 const onAssignItem = async function () {
